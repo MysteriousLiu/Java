@@ -1,0 +1,90 @@
+/* 字符串快速匹配法 */
+import java.util.*;
+
+/**
+ * KMP算法 关键在与前缀表的计算以及在匹配时候要执行的错位回退操作.......
+ */
+
+ public class KMP {
+    public static int[] KMP_profix_table(String pattern) /* 求前缀表*/
+    {
+        char ch [] = pattern.toCharArray();
+        System.out.println(Arrays.toString(ch));
+        int i=1, j=0;
+        int List[] = new int[ch.length];
+        while(i<ch.length) /*循环直到最顶端*/
+        {
+            char c1 =ch[i];
+            char c2 =ch[j];
+            System.out.println(ch[i] +"     "+ ch[j]);
+            if(c1 == c2)/*相等的时候*/
+            {
+                j++;
+                List[i] = j;
+                i++;
+            }
+            else
+            {
+                if(j>0)
+                {
+                    j=List[j-1];
+                }
+                else{
+                    List[i] = j;
+                    i++;
+                }
+            }
+        }
+        return List;
+    }
+    public static void KMP_Search(String pattern, String text)
+    {
+        /**
+        调用函数KMP_profix_table返回一个前缀表*/
+        int profix_table [] = KMP_profix_table(pattern);
+        for (int number1 :profix_table)
+        {
+            System.out.print(number1+" ");
+        }
+//        System.out.println(profix_table.toString());
+        char PATTERN[] = pattern.toCharArray();
+        char TEXT[] = text.toCharArray();
+        /**
+         分别用i来指引pattern ，用j指引text*/
+        int i=0,j=0;
+        /**
+         plen代表pattern的长度 ， tLen代表text的长度*/
+        int pLen = pattern.length();
+        int tLen = text.length();
+
+        while(j<TEXT.length)
+        {
+            if((i==pLen-1)&&(PATTERN[i]==TEXT[j]))
+            {
+                System.out.println("第一次匹配成功所在位置"+(j-i));
+                i = profix_table[i-1];
+            }
+            if(TEXT[j] == PATTERN[i]){
+                i++;
+                j++;
+
+            }else{
+                i = profix_table[i-1];
+                if((profix_table[i]==0)&&(i==0))
+                {
+                    i++;j++;
+                }
+
+            }
+        }
+    }
+     public static void main(String[] args) {
+        String TEXT = "abxabcabcaby";
+         String PATTERN = "abcaby";
+         /*  上下两个String类型变量 均可以作为测试对象*/
+//        String TEXT = "ABABABABCABAABABCABAA";
+//        String  PATTERN = "ABABCABAA";
+        KMP_Search(PATTERN,TEXT);
+
+    }
+}
