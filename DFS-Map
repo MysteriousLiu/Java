@@ -1,0 +1,65 @@
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.concurrent.TimeUnit;
+/*   深度优先遍历图   */
+public class DFS {
+
+    private LinkedList<Integer> map [];
+    private Stack <Integer>stack = new Stack<>();
+    private boolean visit[] ;
+    private int SearchNode ;
+     DFS(int SecherNode)
+    {
+        this.SearchNode =SecherNode;
+        visit = new boolean[SecherNode];
+        map = new LinkedList[SecherNode];
+        for (int i = 0; i < SecherNode; i++) {
+            map[i] = new LinkedList<>();
+        }
+    }
+    void addEdge(int point1 ,int point2)
+    {
+        map[point1].add(point2);
+    }
+    void SearchNode(int point) throws InterruptedException {
+        stack.push(point);
+        while(!stack.empty())
+        {
+            point = stack.peek();
+            if(visit[point]==true)
+            {
+                stack.pop();
+                continue;
+            }
+//            System.out.println(map[point].toString());
+            visit[point] = true;
+            Iterator it = map[point].iterator();
+            System.out.print(point+" ");
+            TimeUnit.SECONDS.sleep(2);
+
+            while(it.hasNext())
+            {
+                int number = (int)it.next();
+                if(visit[number]!=true)
+                {
+                    stack.push(number);
+                }
+            }
+        }
+
+
+    }
+
+
+    public static void main(String[] args) throws InterruptedException {
+        DFS dfs = new DFS(4);
+        dfs.addEdge(0,1);
+        dfs.addEdge(0,2);dfs.addEdge(1,2);
+        dfs.addEdge(2,3);dfs.addEdge(1,0);
+        dfs.addEdge(3,0);
+        dfs.SearchNode(0);
+
+
+    }
+}
