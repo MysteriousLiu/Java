@@ -1,0 +1,127 @@
+public class SingleLink   {
+
+    private  static int size =0;
+    private static singleLink head =new singleLink(0);
+
+    public test() {
+    }
+
+    public static class singleLink
+    {
+        int data;
+        singleLink next ;
+        singleLink(int d)
+        {
+            data = d;
+        }
+        public void print()
+        {
+            System.out.println(String.valueOf(data));
+        }
+    }
+    public int size()
+    {
+        return size;
+    }
+    public static void add(int data)
+    {
+        singleLink sl = new singleLink(data);
+        singleLink p = head;
+        lpf:while(true)
+        {
+            while(p.next==null)
+            {
+                p.next = sl;
+                sl.next =null;
+                size++;
+//                p.next =sl;
+//                p.next.print();
+
+                break lpf;
+            }
+            p = p.next;
+        }
+
+    }
+    public static void printLink()
+    {
+        singleLink p = head;
+        while(p.next!=null)
+        {
+            System.out.print(p.data+" ");
+            p =p.next;
+        }
+        System.out.print(p.data);
+        System.out.println();
+    }
+
+    public static boolean contains(int data)
+    {
+        singleLink p = head;
+        while(true)
+        {
+            while (p==null)
+            {
+                return false;
+            }
+            if(p.data==data)
+            {
+                return true;
+            }
+            else {
+                p=p.next;
+            }
+        }
+    }
+    public static void delet(int data)
+    {
+        singleLink p = head;
+        singleLink n = p;
+        while(true)
+        {
+            if(p.data==data)
+            {
+               n.next = p.next;
+               size--;
+               break;
+            }
+            else {
+                n =p;
+                p=p.next;
+            }
+        }
+    }
+    public static void containsOperation(int data)
+    {
+        boolean exist = contains(data);
+        if(exist==true)
+        {
+            delet(data);
+        }
+        else {
+            add(data);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        SingleLink t = new SingleLink();
+        t.add(10);
+        t.add(20);
+        t.add(20);
+        t.add(20);
+        t.add(20);
+        t.add(20);
+        t.add(30);
+        printLink();
+        System.out.println(contains(10));
+        System.out.println(contains(22));
+        System.out.println(contains(666));
+        delet(10);
+        System.out.println(contains(10));
+        containsOperation(20);
+        printLink();
+        containsOperation(50);
+        printLink();
+    }
+}
