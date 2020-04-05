@@ -1,0 +1,74 @@
+import java.util.Stack;
+
+/**
+ * 本例采用树形结构描述表达式（可以通过中序遍历树得到中序表达式）
+ *
+ * 后缀表达式转为树
+ */
+
+public class Suffix_infix {
+
+    static TreeNode root ;
+    static private  String line ;
+    public static class TreeNode{
+        char data;
+        TreeNode ltn ;
+        TreeNode rtn ;
+        public TreeNode(char d)
+        {
+            data = d;
+        }
+
+    }
+    Suffix_infix(String str)
+    {
+        line = str;
+    }
+    public static void lineToTree()
+    {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        for (int i = 0; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if((ch>='0'&&ch<='9')||(ch>='a'&&ch<='z')||(ch>='A'&&ch<='Z'))
+            {
+                stack.push(new TreeNode(ch));
+            }else if(ch=='+'||ch=='-'||ch=='*'||ch=='/')
+            {
+                TreeNode nodeCh = new TreeNode(ch);
+                nodeCh.rtn = stack.pop();
+                nodeCh.ltn = stack.pop();
+                stack.push(nodeCh);
+            }
+        }
+        root = stack.pop();
+
+    }
+
+    public static void printtree(TreeNode treeNode) //遍历树用递归
+    {
+        if(treeNode.ltn==null&&treeNode.rtn==null)
+        {
+            System.out.print(treeNode.data+" ");
+        }else {  //任意修改下面的if 语句和输出语句可以以不同的方式遍历树
+            // 中序遍历(左，中，右)(正常的表达式是通过中序遍历得到)  先序遍历 （中左右）后序遍历（左右中）
+            System.out.print("(");
+            //遍历左树
+            if(treeNode.ltn!=null)
+                printtree(treeNode.ltn);
+            //输出中间节点
+            System.out.print(treeNode.data+" ");
+            //遍历右树
+            if(treeNode.rtn!=null)
+                printtree(treeNode.rtn);
+
+            System.out.print(")");
+        }
+
+    }
+    public static void main(String[] args) {
+        Suffix_infix hz = new Suffix_infix("ab+cde+**");
+        lineToTree();
+        printtree(root);
+    }
+
+}
