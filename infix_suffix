@@ -1,0 +1,62 @@
+/*  中缀转后缀 */
+import java.util.*;
+
+public class infix_Suffix {
+    static  Stack<Character> stack = new Stack<Character>();
+    private static  String result="";
+
+    public static int  returnDegree(char ch)
+    {
+        if((ch=='*')||(ch=='/'))
+            return 2;
+        if((ch=='+')||(ch=='-'))
+            return 1;
+        if(ch=='(')
+        return 0;
+        return 0;
+    }
+
+    public static void main(String [] args)
+    {
+        Scanner scanner = new Scanner(System.in);
+        String str = scanner.nextLine(); //输入中缀表达式
+
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if('0'<ch&&ch<'9') //操作数输出
+            {
+                result+= ch +" ";
+            }else
+                if(stack.isEmpty())
+                stack.push(ch);
+            else if(ch =='(')
+            {
+                stack.push(ch);
+            }else if(ch==')')
+            {
+                while((stack.peek()!='(')&&(!stack.isEmpty()))
+                {
+                    result+=stack.pop()+" ";
+                    if(stack.isEmpty()) break;
+                }
+                stack.pop();//这弹出（
+            }else if(returnDegree(ch)>returnDegree(stack.peek()))
+            {
+                stack.push(ch);
+            }else {
+                while((returnDegree(ch)<=returnDegree(stack.peek())))
+                {
+                    result+=stack.pop()+" ";
+                    if(stack.isEmpty()) break;
+                }
+                stack.push(ch);
+            }
+        }
+        while(!stack.isEmpty())
+        {
+            result+= stack.pop()+" ";
+        }
+        System.out.println(result.trim());
+
+    }
+}
