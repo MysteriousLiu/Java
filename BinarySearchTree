@@ -1,0 +1,192 @@
+//二叉查找树
+public class  BinarySearchTree<T>  {
+    private static BinaryNode root = null;
+
+    // 节点结构
+    private static class BinaryNode<T extends Comparable<T>> {
+        T element ;
+        BinaryNode lbn ;
+        BinaryNode rbn;
+        BinaryNode(T ele)
+        {
+            this(ele,null,null);
+        }
+        BinaryNode(T ele, BinaryNode l, BinaryNode r)
+        {
+            lbn = l;
+            rbn = r;
+            element = ele;
+        }
+    }
+
+    /**
+     * 是否包含方法
+     * @param implement
+     * @param
+     * @return
+     */
+    public boolean contains(T implement)
+    {
+        return contains(implement,root);
+    }
+    public boolean contains(T implement , BinaryNode Root)
+    {
+        if(Root ==null)
+        {
+            return false;
+        }
+        int comparableResult = Root.element.compareTo(implement);
+        if(comparableResult>0)
+        {
+            return contains(implement,Root.rbn);
+        }else if(comparableResult<0)
+        {
+            return contains(implement,Root.lbn);
+        }else
+            return true;
+    }
+
+    /**
+     * 插入方法
+     * @param element
+     * @param
+     * @return
+     */
+    public void insert(T element)
+    {
+        root = insert(element, root);
+    }
+    public BinaryNode insert(T element,BinaryNode Root)
+    {
+
+        if(Root==null)
+        {
+            return new BinaryNode((Comparable) element,null,null);
+        }
+        int compareResult = Root.element.compareTo(element);
+        if(compareResult<0)
+        {
+            Root.lbn = insert(element,Root.lbn);
+        }else if(compareResult>0)
+        {
+            Root.rbn = insert(element,Root.rbn);
+        }else{
+
+        }
+
+        return Root;
+    }
+
+    /**
+     * 输出方法
+     */
+    public void printTree()
+    {
+        if(root ==null)
+        {
+            System.out.println("树空");
+        }else printTree(root);
+
+    }
+    public void printTree(BinaryNode root)
+    {
+        if(root.lbn!=null)
+        {
+            printTree(root.lbn);
+        }
+        System.out.println(root.element);
+        if(root.rbn!=null)
+        {
+            printTree(root.rbn);
+        }
+    }
+
+    /**
+     * 删除节点
+     */
+    public void remove(T element)
+    {
+        System.out.println("移除的"+element+"在树中的状态："+contains(element));
+        root = remove(element,root);
+    }
+    public BinaryNode remove(T element , BinaryNode root)
+    {
+        if(root ==null)
+        {
+            System.out.println("未找到");
+            return root;
+        }
+
+        int compareResult = root.element.compareTo(element);
+
+        if(compareResult<0)
+        {
+             root.lbn = remove(element,root.lbn);
+        }else if(compareResult>0)
+        {
+            root.rbn = remove(element,root.rbn);
+        }else{
+            if(root.lbn!=null&&root.rbn!=null)
+            {
+                root.element = findMin(root.lbn).element;
+                root.rbn = remove((T) root.element,root.rbn);
+            }else root= root.lbn==null? root.rbn : root.lbn;
+            return root;
+        }
+        return root;
+    }
+
+    /**
+     * 查找最小节点
+     *
+     */
+    public BinaryNode findMin()
+    {
+        return findMin(root);
+    }
+    public BinaryNode findMin(BinaryNode root)
+    {
+        if(root == null)
+        {
+            return null;
+        }else
+        {
+            if(root.lbn==null)
+                return root;
+        }
+        return findMin(root.lbn);
+    }
+
+    /**
+     * 查找最大节点
+     *
+     */
+    public BinaryNode findMax(BinaryNode root)
+    {
+        if(root ==null)
+            return null;
+        else if(root.rbn ==null)
+        {
+            return root;
+        }
+        return findMin(root.rbn);
+    }
+
+    public static void main(String[] args) {
+
+        BinarySearchTree<Integer> bst = new  BinarySearchTree();
+        bst.insert(10);
+        bst.insert(12);
+        bst.insert(55);
+        bst.insert(5);
+        bst.insert(0);
+        bst.insert(-1);
+
+        bst.printTree();
+        bst.remove(-1);
+
+        System.out.println(bst.contains(-1));
+
+    }
+
+}
