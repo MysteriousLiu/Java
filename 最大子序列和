@@ -1,0 +1,29 @@
+import java.util.Scanner;
+/*
+求最大子序列和
+ */
+public class MaxSonLineNum
+{
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int number = scanner.nextInt();
+        int nowsum = 0;
+        int maxsum =0;
+        for (int i = 0; i < number; i++) {
+            nowsum+=scanner.nextInt();
+            if(nowsum>maxsum)
+            {
+                maxsum = nowsum;
+            }
+            else
+            {
+                if(nowsum<0)
+                {
+                    nowsum =0;
+                }
+            }
+        }
+        System.out.println(maxsum);
+    }
+
+}
