@@ -1,0 +1,220 @@
+/**
+ * 平衡二叉树
+ * 本例用排序的二叉查找树作为基础
+ */
+public class AVL_BinarySearchTree {
+
+    private static BinaryNode root ;
+
+    public static class BinaryNode implements Comparable<Integer> {
+        int element;
+        BinaryNode left;
+        BinaryNode right;
+        int height;
+        BinaryNode(int e , BinaryNode  l , BinaryNode r , int h)
+        {
+            element = e;
+            left = l;
+            right = r;
+            height = h;
+
+        }
+        @Override
+        public int compareTo(Integer o) {
+            return this.element - o>0? 1:(this.element-o<0? -1:0);
+        }
+    }
+
+    public static boolean isEmpry()
+    {
+        return root==null?true:false;
+    }
+
+    public static BinaryNode Clear(BinaryNode root)
+    {
+        if(root == null)
+        {
+            return null;
+        }
+        if(root!=null)
+        {
+            root.left = Clear(root.left);
+            root.right = Clear(root.right);
+
+        }
+        return root;
+    }
+
+    public static void insert(int data)
+    {
+        root = insert(data , root);
+    }
+    public  static BinaryNode insert(int data , BinaryNode  root)
+    {
+        if(root == null)
+        {
+            return new BinaryNode(data,null,null,0);
+        }
+        int CompareResult = root.compareTo(data);
+        if(CompareResult<0)
+        {
+            root.left = insert(data , root.left);
+        }else if(CompareResult>0)
+        {
+            root.right = insert(data, root.right);
+        }else ;
+        return Balance(root);
+    }
+
+    public static boolean Contains(int data)
+    {
+        if(Contains(data , root) == true)
+        {
+            System.out.println("存在");
+            return true;
+        }else
+        {
+            System.out.println("不存在");
+            return  false;
+        }
+    }
+    public static boolean Contains(int data,BinaryNode root)
+    {
+        if(root == null)
+        {
+            return false;
+        }
+        int SearchResult = root.compareTo(data);
+        if(SearchResult<0)
+        {
+            return Contains(data, root.left);
+        }else if(SearchResult>0)
+        {
+            return Contains(data,root.right);
+        }else
+            return true;
+
+    }
+    private static int height(BinaryNode root)
+    {
+        return root == null ? -1:root.height;
+    }
+
+    private static final int Allow_imbalance = 1;
+
+    public static BinaryNode Balance(BinaryNode root)
+    {
+        if(root == null)
+        {
+            return root;
+        }
+        if(height(root.left)-height(root.right)>Allow_imbalance)
+        {
+            if(height(root.left.left)>=height(root.right.right))
+            {
+                root = rotateWithLeftChild(root);
+            }else root = DoubleRotateWithLeft_Right_child(root);
+        }
+        else {
+
+            if(height(root.right.right)>height(root.right.left))
+            {
+                root = rotateWithRightChild(root);
+            }else  root = DoubleRotateWithRight_Left_Child(root);
+
+        }
+        root.height = Math.max(height(root.left),height(root.right))+1;
+        return root;
+
+    }
+
+    public static BinaryNode rotateWithLeftChild(BinaryNode root) //单旋左孩子
+    {
+        BinaryNode child = root.left;
+        root.left = child.right;
+        child.right = root;
+        root.height = Math.max(height(root.left),height(root.right))+1;
+        child.height= Math.max(height(child.left),height(child.right))+1;
+        return child;
+    }
+    public static BinaryNode DoubleRotateWithLeft_Right_child(BinaryNode root) //双旋左——右
+    {
+        root.left = rotateWithRightChild(root.left);
+        return rotateWithLeftChild(root);
+    }
+    public static BinaryNode rotateWithRightChild(BinaryNode root) //单旋右孩子
+    {
+        BinaryNode child = root.right;
+        root.right = child.left;
+        child.left = root;
+        root.height = Math.max(height(root.right),height(root.left))+1;
+        child.height = Math.max(height(child.right),height(child.left))+1;
+        return child;
+    }
+    public static BinaryNode DoubleRotateWithRight_Left_Child(BinaryNode root)  //双旋右——左
+    {
+        root.right = rotateWithLeftChild(root.right);
+        return rotateWithRightChild(root);
+    }
+
+    public static void remove(int data)
+    {
+        root = remove(data , root);
+    }
+    public static BinaryNode remove(int data, BinaryNode root)
+    {
+        if(root == null)
+        {
+            return null;
+        }
+
+        int CompareResult = root.compareTo(data);
+        if(CompareResult<0)
+        {
+            root.left = remove(data , root.left);
+        }else if(CompareResult>0)
+        {
+            root.right = remove(data , root.right);
+        }else if(root.left!= null&&root.right!= null)
+        {
+            root.element = findMin(root).element;
+            root.right = remove(root.element,root.right);
+        }else
+            root = (root.left!= null)?root.left:root.right;
+        return Balance(root);
+    }
+    /**
+     * 查找最小节点
+     *
+     */
+    public static BinaryNode findMin()
+    {
+        return findMin(root);
+    }
+    public static BinaryNode findMin(BinaryNode root)
+    {
+        if(root == null)
+        {
+            return null;
+        }else
+        {
+            if(root.left==null)
+                return root;
+        }
+        return findMin(root.left);
+    }
+
+
+
+    public static void main(String[] args) {
+        AVL_BinarySearchTree abs = new AVL_BinarySearchTree();
+        BinaryNode b1 = new BinaryNode(12,null,null,0);
+        BinaryNode b2 = new BinaryNode(11 ,null,null,0);
+        System.out.println(b1.compareTo(b2.element));
+        remove(12);
+
+        System.out.println(Contains(12));
+        Clear(root);
+        System.out.println(Contains(11));
+    }
+}
