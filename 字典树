@@ -1,0 +1,87 @@
+//在leetcode做的第208题，构造一个字典树 也称为前缀树Trie 认为比较有价值分享
+
+/**  题目中只有下面前三种方法要求完善，我又进行了一个简单的删除动作，字典树只能存贮小写字母a-z 并且单词之间不能又空格否则会编译出错
+    */ 
+
+
+
+
+
+public class Trie {
+
+    class TreeNode {
+        boolean attribute;
+        TreeNode array[];
+        TreeNode (){
+            attribute = false;
+            array = new TreeNode[26];
+            for (int i = 0; i < array.length; i++) {
+                array[i] = null;
+            }
+        }
+    }
+
+    TreeNode root;
+    /** Initialize your data structure here. */
+    public Trie() {
+        root = new TreeNode();
+    }
+
+    /** Inserts a word into the trie. */
+    public void insert(String word) {
+        char[]  chars = word.toCharArray();
+        TreeNode treeNode = root;
+        for (int i = 0; i < chars.length; i++) {
+            if(treeNode.array[chars[i] -'a'] == null)treeNode.array[chars[i] -'a'] = new TreeNode();
+            treeNode = treeNode.array[chars[i] -'a'];
+        }
+        treeNode.attribute = true;
+    }
+
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        char[]  chars = word.toCharArray();
+        TreeNode treeNode = root;
+        for (int i = 0; i < chars.length; i++) {
+            if(treeNode.array[chars[i] -'a'] == null)return false;
+            treeNode = treeNode.array[chars[i] -'a'];
+        }
+        return treeNode.attribute;
+    }
+
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        char[]  chars = prefix.toCharArray();
+        TreeNode treeNode = root;
+        for (int i = 0; i < chars.length; i++) {
+            if(treeNode.array[chars[i] -'a'] == null)return false;
+            treeNode = treeNode.array[chars[i] -'a'];
+        }
+        return true;
+    }
+    
+  //仅需要将该位置的标记置为false即可
+    public boolean delet(String word){
+        char[]  chars = word.toCharArray();
+        TreeNode treeNode = root;
+        for (int i = 0; i < chars.length; i++) {
+            if(treeNode.array[chars[i] -'a'] == null){
+                System.out.println("要删除的字母不在字典当中");
+                return false;
+            }
+            treeNode = treeNode.array[chars[i] -'a'];
+        }
+        treeNode.attribute = false;
+        return true;
+    }
+
+    public static void main(String args[]){
+        Trie trie = new Trie();
+        trie.insert("fewewfwr");
+        System.out.println(trie.search("fewgefefewfwe"));
+        System.out.println(trie.startsWith("few"));
+        trie.insert("dawdrhjewwewfw");
+        System.out.println(trie.search("dawdrhjewwewfw"));
+        System.out.println(trie.startsWith("fw"));
+    }
+}
