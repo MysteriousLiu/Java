@@ -1,0 +1,79 @@
+public class CreatTree{
+  static TreeNode root ; //树根
+
+      //定义节点
+      public static class TreeNode {
+          int val;
+          TreeNode left;
+          TreeNode right;
+          TreeNode(int x) { val = x; }
+      }
+
+      //通过先序和中序构造二叉数
+      public static TreeNode buildTree(int[] preorder, int[] inorder) {
+
+          if(preorder.length!= inorder.length) return null;
+          HashMap<Integer ,Integer> map  = new HashMap<>();
+          for (int i = 0; i < inorder.length; i++) {
+              map.put(inorder[i] , i);
+          }
+          return buildTree(preorder,0,preorder.length-1 , map , 0 , inorder.length - 1);
+      }
+      private static TreeNode buildTree(int[] preorder, int preleft, int preright, HashMap<Integer, Integer> map, int inleft, int inright) {
+
+          if(preleft>preright || inleft>inright) return  null ; //左大于右
+
+          TreeNode node = new TreeNode(preorder[preleft]);//当前节点
+          int in =  map.get(preorder[preleft]); //获取当前节点在中序遍历中的下标
+          node.left =buildTree(preorder, preleft+1,preleft+in-inleft , map, inleft , in -1);
+          node.right = buildTree(preorder,preleft+in-inleft+1 , preright , map , in+1 , inright);
+          return node ;
+      }
+
+      //镜面反转
+      public static void reverse(TreeNode root){
+          if(root ==null) return;
+          reverse(root.left);
+          reverse(root.right);
+          TreeNode c = root.left;
+          root.left = root.right;
+          root.right = c;
+      }
+
+      //中序遍历
+      public static void inorderPrint(TreeNode root){
+          if(root == null)return;
+          inorderPrint(root.left);
+  //        System.out.print(root.val );
+          inorderPrint(root.right);
+      }
+
+      //先序
+      public static void preprint(TreeNode root){
+          if(root == null)return;
+  //        System.out.print(root.val);
+          preprint(root.left);
+          preprint(root.right);
+      }
+      //层序遍历
+      public static void cengPrint(TreeNode root){
+          Stack<TreeNode> stack = new Stack<>();
+          String string = "";
+          stack.push(root);
+          while(!stack.isEmpty()){
+              Iterator it=  stack.iterator();
+              Stack<TreeNode> behind = new Stack<>()  ;
+              while(it.hasNext()){
+                  TreeNode t = (TreeNode) it.next();
+                  string += t.val+" ";
+  //                System.out.print(t.val);
+                  if(t.left!=null)behind.add(t.left);
+                  if(t.right!=null)behind.add(t.right);
+              }
+              stack = behind;
+          }
+          System.out.println(string.trim());
+      }
+      public static void main(String args[]){
+      }
+    }
