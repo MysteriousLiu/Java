@@ -1,4 +1,4 @@
-/*  中缀转后缀 */
+/*  数学表达式中缀转后缀 */
 import java.util.*;
 
 public class infix_Suffix {
