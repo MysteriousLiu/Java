@@ -1,0 +1,253 @@
+import java.util.Scanner;
+
+public class Sort {
+
+    //0.选择排序
+    public static void SelectSort(int arr[]){
+        long start = System.nanoTime();
+
+        for (int i = 0; i < arr.length; i++) {
+            int min = i;
+            for (int j = i+1; j < arr.length; j++) {
+                if(arr[j]<arr[min]) {
+                    min = j;
+                }
+            }
+            int ex = arr[min];
+            arr[min] = arr[i];
+            arr[i] = ex;
+        }
+        long end = System.nanoTime();
+//        System.out.println(Arrays.toString(arr));
+        System.out.println("Time ="+(end-start));
+    }
+
+
+    // 1. 插入排序
+    public static int [] Insertsort(int array[])
+    {
+        int j;
+        for (int i = 1; i < array.length; i++) {
+            int number = array[i];
+            for (j= i; j >0&& number< array[j-1]; j--) {
+                array[j] = array[j-1];
+            }
+            array[j] = number;
+
+        }
+        return array;
+
+    }
+    // 2.希尔排序
+    public static int [] ShellSort(int array[])
+    {
+        int  j ;
+        for(int gap = array.length/2; gap>0;gap /=2)
+        {
+//            System.out.println(" gap = "+ gap);
+            for(int i =gap ;i< array.length;i++)
+            {
+//                System.out.println(" i ="+ i);
+                int tmp = array[i];
+//                System.out.println(" tmp ="+tmp);
+                for(j = i ; j>=gap&&(tmp<array[j-gap]);j-= gap)
+                    array[j] = array[j-gap];
+                array[j] = tmp;
+//                System.out.println(array[j]);
+            }
+        }
+        return array;
+    }
+
+
+    /**
+     * 3. 堆排序
+     */
+
+
+    public static int leftChild( int i)
+    {
+        return 2*i+1;
+    }
+
+    public static int [] PercolateDown(int array[] ,int  i,int size) //i 下潜的位置  size 堆的大小
+    {
+        int child ;
+        int tmp ; //要下移节点的值
+        for(tmp = array[i] ; leftChild(i) < size; i = child) //for 的目的是在二叉堆中向下移动寻找tmp合适的位置，找到就break；
+        {
+//            System.out.println("lai ");
+            child = leftChild(i);
+            if(child != size-1 && array[child] < array[child+1]) //如果右孩子大就
+            {
+                child++; //child+1
+            }
+            if(tmp<array[child]) //将tmp和孩子比较  如果小于就将孩子上移
+            {
+                //将小值向下移动
+                array[i] = array[child];
+            }
+            else  // 找到合适位置
+            {
+                break; //跳出for循环
+            }
+        }
+        //在合适的位置放入tmp
+        array[i] = tmp;
+        return  array;
+    }
+    public static int[] heapsort( int  array[]) //
+    {
+        //creat heap
+        for (int i = array.length/2 -1; i >= 0 ; i--) //从最后一个父节点开始向上对每个节点下移
+        {
+            array = PercolateDown(array, i ,array.length);
+        }
+        for (int i = array.length-1; i >=0 ; i--) {
+            array = DeleteMax(array,0 ,i);
+            array = PercolateDown(array ,0,i);
+        }
+        return array;
+
+    }
+    public static int [] DeleteMax(int array[] , int i , int n)
+    {
+        int max = array[i];
+        for (int j = 0; j < n; j++) {
+            array[j] = array[j+1];
+        }
+        array[n] = max ;
+        return array;
+    }
+
+
+    //4. 归并排序
+
+    public static void mergeSort( int array[])
+    {
+        int ReplaceArray[] = new int [array.length];
+        mergeSort(array,ReplaceArray,0,array.length-1);
+    }
+    private static void mergeSort(int array[] , int ReplaceArray[], int start , int end)
+    {
+        if(start<end)
+        {
+            int center = (end+start)/2;
+             mergeSort(array,ReplaceArray,start,center);
+             mergeSort(array,ReplaceArray,center+1,end);
+             merge(array,ReplaceArray,start,center,end);
+        }
+
+    }
+    public static void merge(int array[], int ReplaceArray[] ,int leftstart , int center, int rightend)
+    {
+        int endLeft = center;
+        int rightstart = center+1;
+        int tmp = leftstart;
+        int numElement = rightend-leftstart+1;
+        while(leftstart<=endLeft && rightstart<=rightend)
+        {
+            if(array[leftstart]<array[rightstart])
+            {
+                ReplaceArray[tmp++] = array[leftstart++];
+            }else{
+                ReplaceArray[tmp++] = array[rightstart++];
+            }
+        }
+        while(leftstart<=endLeft)
+        {
+            ReplaceArray[tmp++] = array[leftstart++];
+        }
+        while (rightstart<=rightend)
+        {
+            ReplaceArray[tmp++] = array[rightstart++];
+        }
+        for (int i = 0; i < numElement ; i++,rightend--) {
+            array[rightend] = ReplaceArray[rightend];
+        }
+    }
+
+    // 5.快速排序
+    public static void  insertsort(int array[] ,int  left , int right)
+    {
+        int j ;
+        for (int i = left+1; i <= right; i++) {
+            int ex = array[i];
+            for (j = i ; j > 0 && ex < array[j-1]; j--) {
+                array[j] = array[j-1];
+            }
+            array[j] = ex;
+        }
+    }
+    public static void quicksort(int array[] , int left ,int  right)
+    {
+        if(left+10 <= right){
+            int pivot = getmedian(array, left, right);
+            int i = left;
+            int j = right-1;
+            for (;;){
+                while(array[++i]<pivot){}
+                while (array[--j]>pivot){}
+                if(i<j) swap(array, i ,j);
+                else break;
+            }
+            swap(array, i, right -1 );
+            quicksort(array , left , i-1);
+            quicksort(array , i+1 , right);
+
+        }else{
+            //使用插入排序效果更好
+            insertsort(array,left,right);
+        }
+    }
+    public static int getmedian(int array[] , int left, int  right)
+    {
+        int center = (left + right)/2;
+        if(array[left] > array[center])
+        {
+            swap(array, left,center);
+        }
+        if(array[left]>array[right]){
+            swap(array,left,right);
+        }
+        if(array[center]>array[right]){
+            swap(array , center, right);
+        }
+        swap(array, center ,right-1);
+        return array[right-1];
+    }
+    public static void swap(int array[] , int A , int B)
+    {
+        int C = array[A];
+        array[A] = array[B];
+        array[B] = C;
+    }
+    //快速排序驱动
+    public static void quicksort(int array [])
+    {
+        quicksort(array,0,array.length-1);
+
+    }
+
+    private static int Array[] ;
+    public static void main(String[] args) {
+
+        Scanner scan = new Scanner(System.in);
+        int num = scan.nextInt();
+        Array = new int [num];
+        for (int i = 0; i < num; i++) {
+            Array[i] = scan.nextInt();
+        }
+
+//        arra = Insertsort(arra);
+//        arra = ShellSort(arra);
+//        arra = heapsort(arra);
+         mergeSort(Array);
+        String str= "";
+        for (int number:Array) {
+            str+=number+" ";
+        }
+        System.out.println(str.trim());
+
+    }
+}
